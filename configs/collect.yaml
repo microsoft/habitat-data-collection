@@ -1,0 +1,28 @@
+blob_container_dir: /datadrive/azure_storage/pactdata/habitat-data #/mnt/data # /datadrive/azure_storage/pactdata/habitat-data # /mnt/data on aml /mnt/data # 
+offline_dataset: 
+    description: "first batch of habitat dataset"
+    dataset_dir: ${blob_container_dir}/collected-data/test/hm3d/${online_env.env_split}
+    record_video: False
+    seqrecord_dir: ${offline_dataset.dataset_dir}/seqrecord 
+    dataset_pretransform_module: null  # no transform applied
+    seqrecord_features: 
+        "observations-rgb": null 
+        "observations-depth": null
+        "observations-semantic": null
+        "action-action": null
+        "pose": null
+num_workers: 5
+online_env: 
+    env_config_path: ./configs/pointnav_config/pointnav_hm3d.yaml
+    env_split: val
+    env_data_path: ${blob_container_dir}/habitat-dataset/hm3d/test/${online_env.env_split}/${online_env.env_split}.json.gz
+    env_scene_dir: ${blob_container_dir}/habitat-dataset
+    env_scene_dataset_config: ${blob_container_dir}/habitat-dataset/hm3d/hm3d_annotated_basis.scene_dataset_config.json
+    num_episodes: 3600 # 14500 for training,
+agent_config: # only used for learning-model agent
+    state_features: ["observations->rgb"]
+    action_features: "action->action"
+    ckpt_path: outputs/habitat/pact_ckpt/last-v1.ckpt
+    package_path: ""
+    package_name: "" 
+    resource_name: ""

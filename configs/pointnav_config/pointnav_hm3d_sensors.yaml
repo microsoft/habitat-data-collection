@@ -1,0 +1,80 @@
+# ref for specifying sensors: https://github.com/facebookresearch/habitat-lab/blob/main/test/test_sensors.py#L448
+habitat:
+  environment:
+    max_episode_steps: 500
+  simulator:
+    agent_0:
+      sensors: ['rgb_sensor', 'depth_sensor', 'semantic_sensor', 'equirect_rgb_sensor', 'equirect_depth_sensor', 'equirect_semantic_sensor', 'top_down_rgb', 'top_down_semantic']
+      height: 0.88
+      # radius: 0.18
+    habitat_sim_v0:
+      # gpu_device_id: 0
+      allow_sliding: true
+    rgb_sensor:
+      width: 960 
+      height: 720
+      hfov: 55
+      position: [0, 0.88, 0]
+      # noise_model: "GaussianNoiseModel"
+    depth_sensor:
+      width: 960
+      height: 720
+      hfov: 55
+      position: [0, 0.88, 0]
+      # noise_model: "RedwoodDepthNoiseModel"
+    semantic_sensor:
+      width: 960
+      height: 720
+      hfov: 55
+      position: [0, 0.88, 0]
+    equirect_rgb_sensor:
+      width: 960
+      height: 720
+      position: [0, 0.88, 0]
+      uuid: "equirect_rgb"
+    equirect_depth_sensor:
+      width: 960
+      height: 720
+      position: [0, 0.88, 0]
+      uuid: "equirect_depth"
+    equirect_semantic_sensor:
+      width: 960
+      height: 720
+      position: [0, 0.88, 0]
+      uuid: "equirect_semantic"
+    top_down_rgb:
+      width: 960
+      height: 720
+      # ortho_scale: 0.18 # 1.0 was too close
+      position: [0, 0.88, 0]
+      # according to https://github.com/facebookresearch/habitat-lab/issues/531
+      orientation: [-1.57, 0, 0]
+    top_down_semantic:
+      width: 960
+      height: 720
+      #ortho_scale: 0.18 # 1.0 was too close
+      position: [0, 0.88, 0]
+      # according to https://github.com/facebookresearch/habitat-lab/issues/531
+      orientation: [-1.57, 0, 0]
+
+    
+  task:
+    type: Nav-v0
+    end_on_success: True
+    reward_measure: "distance_to_goal_reward"
+    success_measure: "spl"
+
+
+    sensors: ['pointgoal_with_gps_compass_sensor']
+    pointgoal_with_gps_compass_sensor:
+      goal_format: "POLAR"
+      dimensionality: 2
+    goal_sensor_uuid: pointgoal_with_gps_compass
+
+    measurements: ['distance_to_goal', 'success', 'spl', 'distance_to_goal_reward', "top_down_map"]
+    success:
+      success_distance: 0.2
+  dataset:
+    type: PointNav-v1
+    split: train
+    data_path: data/datasets/pointnav/hm3d/v1/{split}/{split}.json.gz
